@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "684435327031",
+    "project_id": "giveaway-flutter",
+    "storage_bucket": "giveaway-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:684435327031:android:95f1c458ec2393f62cd7b2",
+        "android_client_info": {
+          "package_name": "com.hack.give_away"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "684435327031-13399amrqe60cr4a5i8nali2ia2kn7lt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDASRc52ch2FSDljovdn7CgSVOheaH33kw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "684435327031-13399amrqe60cr4a5i8nali2ia2kn7lt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
