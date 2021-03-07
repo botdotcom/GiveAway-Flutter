@@ -1,8 +1,9 @@
 # GiveAway
-A new Flutter mobile application for a hackathon
+A new Flutter mobile application for SFHacks
 
 ## Introduction
 This project is my first attempt at building a full-fledged mobile application using Flutter and Firebase. It is an app for users in a community to buy, sell or donate old items, rather than them going to waste. This can act towards environment sustainability and building a sense of community, as well as reducing carbon footprint.
+You can view the submitted demo [here](https://youtu.be/wbh2Pqiaahw).
 
 ## Video Walkthrough 1
 Here's a walkthrough of implemented user stories:
