@@ -1,7 +1,11 @@
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:give_away/models/item.dart';
 import 'package:give_away/components/rounded_button.dart';
@@ -38,6 +42,7 @@ class ItemCustomForm extends StatefulWidget {
 class ItemCustomFormState extends State<ItemCustomForm> {
   final _itemFormKey = GlobalKey<FormState>();
   Item _item = Item();
+  File _imageFile;
   Color color = Colors.red[300];
   String categoryDropdownValue = 'Clothes';
   List<String> categoryOptions = ['Clothes', 'Electronics', 'Furniture', 'Toys', 'Books', 'Supplies'];
@@ -166,6 +171,32 @@ class ItemCustomFormState extends State<ItemCustomForm> {
                     SizedBox(
                       height: 16.0,
                     ),
+                    GestureDetector(
+                        onTap: () {
+                          showPicker(context);
+                        },
+                        child: Container(
+                          child: (_item.imageUrl != null)
+                              ? Image.network(_item.imageUrl)
+                              : Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200]
+                            ),
+                            width: 50.0,
+                            height: 50.0,
+                            child: Icon(
+                              Icons.image_outlined,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8.0,
+                    ),
+                    SizedBox(
+                      height: 16.0,
+                    ),
                     RoundedButton(
                         title: 'Cancel',
                         color: Colors.white70,
@@ -183,6 +214,7 @@ class ItemCustomFormState extends State<ItemCustomForm> {
                           _item.createdAt = DateTime.now();
                           Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
                           _item.location = new GeoPoint(position.latitude, position.longitude);
+                          _item.imageUrl = await uploadImageToStorage(_item.author);
 
                           if (_itemFormKey.currentState.validate()) {
                             _itemFormKey.currentState.save();
@@ -195,7 +227,8 @@ class ItemCustomFormState extends State<ItemCustomForm> {
                               available: _item.available,
                               author: _item.author,
                               createdAt: _item.createdAt,
-                              location: _item.location
+                              location: _item.location,
+                              imageUrl: _item.imageUrl
                             );
 
                             addItemToDatabase(item);
@@ -221,7 +254,101 @@ class ItemCustomFormState extends State<ItemCustomForm> {
       'price': item.price,
       'available': item.available,
       'createdAt': item.createdAt,
-      'location': item.location
+      'location': item.location,
+      'imageUrl': item.imageUrl
     });
   }
+
+  void showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext buildContext) {
+          return SafeArea(
+            child: Container(
+              child: Wrap(
+                children: <Widget>[
+                  ListTile(
+                    leading: Icon(Icons.photo_library_outlined),
+                    title: Text(
+                        'Photo Gallery'
+                    ),
+                    onTap: () {
+                      captureImage(ImageSource.gallery);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.camera_outlined),
+                    title: Text(
+                        'Camera'
+                    ),
+                    onTap: () {
+                      captureImage(ImageSource.camera);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+    );
+  }
+
+  void captureImage(ImageSource source) async {
+    PickedFile picked = await ImagePicker().getImage(source: source);
+    File selected = File(picked.path);
+
+    setState(() {
+      _imageFile = selected;
+    });
+  }
+
+  // void uploadImageToStorage(String author) async {
+  Future<String> uploadImageToStorage(String author) async {
+    final _firebaseStorage = FirebaseStorage.instance;
+
+    if (_imageFile != null) {
+      var filePath = '$author/${DateTime.now()}.png';
+      var file = await _firebaseStorage.ref().child(filePath).putFile(_imageFile);
+
+      var downloadUrl = await _firebaseStorage.ref().child(filePath).getDownloadURL();
+
+      // setState(() {
+      //   _item.imageUrl = downloadUrl;
+      // });
+
+      return downloadUrl;
+    }
+  }
+
+  // Future<String> uploadImageFromGalleryToStorage(String author) async {
+  //   final _firebaseStorage = FirebaseStorage.instance;
+  //   final _imagePicker = ImagePicker();
+  //   PickedFile pickedImage;
+  //
+  //   // check permissions
+  //   await Permission.photos.request();
+  //   var photosPermissionStatus = await Permission.photos.status;
+  //
+  //   if (photosPermissionStatus.isGranted) {
+  //     // select image
+  //     pickedImage = await _imagePicker.getImage(source: ImageSource.gallery);
+  //     var imageFile = File(pickedImage.path);
+  //
+  //     if (imageFile != null) {
+  //       // upload to firebase storage
+  //       var downloadUrl = await _firebaseStorage.ref().child(author).getDownloadURL();
+  //       return downloadUrl;
+  //     }
+  //     else {
+  //       print("No image path received!");
+  //       return null;
+  //     }
+  //   }
+  //   else {
+  //     print("Pemission to access photo gallery not granted!");
+  //     return null;
+  //   }
+  // }
 }

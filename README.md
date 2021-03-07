@@ -10,19 +10,20 @@ This project is my first attempt at building a full-fledged mobile application u
 - [x] User can login to his account
 - [x] User can view items in feed
 - [x] User can post a new item
-- [ ] User can upload an image for his item
+- [x] User can upload an image for his item
+    - [x] User can upload image from photo gallery
+    - [x] User can upload image using camera 
 - [ ] User can edit his posted item
 - [ ] User can delete his posted item
-- [x] User can tap on item to view additional details and contact owner
+- [x] User can tap on item to view additional details
 
-### Optional
+### Additional
 - [ ] User can filter his feed by item type and distance
 - [ ] User can find donation centers near him on map
 - [ ] User can message or call the owner
 - [ ] User gets notifications
 
 ## Data Model in Firebase
-
 ### Users
 #### Uses FirebaseAuth
 - email: String

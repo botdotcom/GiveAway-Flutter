@@ -7,14 +7,14 @@ class Item {
   String category;
   String contact;
   String author;
-  // String imageUrl;
+  String imageUrl;
   DateTime createdAt;
   GeoPoint location;
   double price;
   bool available;
 
   Item({this.itemName, this.description, this.category, this.contact,
-      this.author, this.price, this.available, this.createdAt, this.location});
+      this.author, this.price, this.available, this.createdAt, this.location, this.imageUrl});
 
   @override
   String toString() {
