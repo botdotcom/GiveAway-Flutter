@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:give_away/components/floating_button_animate.dart';
 
 import 'package:give_away/models/item.dart';
 
@@ -129,32 +130,43 @@ class ItemDetailScreen extends StatelessWidget {
               ],
             ),
           ),
-          // floatingActionButton: _checkFloatingAction(),
+          floatingActionButton: ( _checkFloatingAction())
+          ? FloatingActionButton(
+              backgroundColor: color,
+              child: Icon(Icons.edit_outlined),
+              onPressed: () {
+                print(item.documentId);
+                // deleteItem(item.documentId);
+              },
+            )
+          : null,
+          // floatingActionButton: ( _checkFloatingAction())
+          //     ? FloatingButtonAnimate(item: item)
+          //     : null,
         ),
       );
   }
 
-  // Widget _checkFloatingAction() {
-  //   User loggedInUser;
-  //
-  //   try {
-  //     final user = await _auth.currentUser;
-  //     if (user != null) {
-  //       loggedInUser = user;
-  //     }
-  //   }
-  //   catch (e) {
-  //     print(e);
-  //   }
-  //
-  //   if (loggedInUser == item.author) {
-  //     return FloatingActionButton(
-  //       backgroundColor: color,
-  //       child: Icon(Icons.edit),
-  //       onPressed: null,
-  //     );
-  //   }
-  // }
+  bool _checkFloatingAction() {
+    User loggedInUser;
+
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        loggedInUser = user;
+      }
+    }
+    catch (e) {
+      print(e);
+    }
+
+    if (loggedInUser.email == item.author) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
 
   // update of CRUD
   void updateItemContact(String documentId, String contact) {

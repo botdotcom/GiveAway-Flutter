@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:give_away/screens/login_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'package:give_away/components/rounded_button.dart';
@@ -80,7 +81,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
                       if (newUser != null) {
-                        Navigator.pushNamed(context, FeedScreen.id);
+                        Navigator.pushNamed(context, LoginScreen.id);
                       }
 
                       setState(() {
