@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geolocator/geolocator.dart';
 
 class Item {
+  String documentId;
   String itemName;
   String description;
   String category;
@@ -13,7 +13,7 @@ class Item {
   double price;
   bool available;
 
-  Item({this.itemName, this.description, this.category, this.contact,
+  Item({this.documentId, this.itemName, this.description, this.category, this.contact,
       this.author, this.price, this.available, this.createdAt, this.location, this.imageUrl});
 
   @override

@@ -76,13 +76,13 @@ class ItemBox extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
                 child: Column(
                   children: <Widget>[
-                    // Container(
-                    //   height: 100.0,
-                    //   child: Image.asset('images/ga_icon.png'),
-                    // ),
-                    // SizedBox(
-                    //   height: 15.0,
-                    // ),
+                    Container(
+                      height: 80.0,
+                      child: (item.imageUrl != null) ? Image.network(item.imageUrl) : Image.network('https://placekitten.com/200/300'),
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
                     Text(
                       item.itemName,
                       style: TextStyle(
@@ -109,7 +109,7 @@ class ItemsStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('items').snapshots(),
+      stream: _firestore.collection('items').orderBy('createdAt').snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -125,6 +125,7 @@ class ItemsStream extends StatelessWidget {
           final currentItemData = item.data();
 
           final currentItem = new Item(
+            documentId: currentItemData['documentId'],
             itemName: currentItemData['itemName'],
             description: currentItemData['description'],
             contact: currentItemData['contact'],
@@ -133,7 +134,8 @@ class ItemsStream extends StatelessWidget {
             price: currentItemData['price'].toDouble(),
             author: currentItemData['author'],
             createdAt: (item.data()['createdAt'] as Timestamp).toDate(),
-            location: currentItemData['location']
+            location: currentItemData['location'],
+            imageUrl: currentItemData['imageUrl'],
           );
 
           // final currentUser = loggedInUser.email;

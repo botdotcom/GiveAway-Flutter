@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'package:give_away/models/item.dart';
 import 'package:give_away/components/rounded_button.dart';
@@ -202,7 +201,7 @@ class ItemCustomFormState extends State<ItemCustomForm> {
                         color: Colors.white70,
                         textColor: color,
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.of(context).pop();
                         }
                     ),
                     RoundedButton(
@@ -232,6 +231,7 @@ class ItemCustomFormState extends State<ItemCustomForm> {
                             );
 
                             addItemToDatabase(item);
+                            Navigator.of(context).pop();
                           }
                         }
                     )
@@ -244,7 +244,11 @@ class ItemCustomFormState extends State<ItemCustomForm> {
     );
   }
 
+  // create of CRUD
   void addItemToDatabase(Item item) {
+    DocumentReference documentReference = _firestore.collection('items').doc();
+
+    // _firestore.collection('items').doc(documentReference.id).add({
     _firestore.collection('items').add({
       'itemName': item.itemName,
       'description': item.description,
@@ -255,10 +259,13 @@ class ItemCustomFormState extends State<ItemCustomForm> {
       'available': item.available,
       'createdAt': item.createdAt,
       'location': item.location,
-      'imageUrl': item.imageUrl
-    });
+      'imageUrl': item.imageUrl,
+      'documentId': documentReference.id
+    }).then((value) => print("Item added"))
+        .catchError((onError) => print("Failed to added item"));
   }
 
+  // image capture helper methods
   void showPicker(context) {
     showModalBottomSheet(
         context: context,
